@@ -1,0 +1,15 @@
+body {
+  background: black;
+  color: white;
+  text-align: center;
+  font-family: monospace;
+}
+
+#orb {
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, cyan, black);
+  border-radius: 50%;
+  margin: 30px auto;
+}
+
