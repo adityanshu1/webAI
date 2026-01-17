@@ -5,7 +5,7 @@ import os
 
 app = FastAPI()
 
-with open("backend/identity.txt", "r") as f:
+with open("identity.txt", "r") as f:
     SYSTEM_IDENTITY = f.read()
 
 HF_API_TOKEN = os.getenv("HF_API_TOKEN")
