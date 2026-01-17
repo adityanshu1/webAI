@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
-import subprocess
+import requests
 import os
 
 app = FastAPI()
@@ -8,18 +8,22 @@ app = FastAPI()
 with open("backend/identity.txt", "r") as f:
     SYSTEM_IDENTITY = f.read()
 
+HF_API_TOKEN = os.getenv("HF_API_TOKEN")
+MODEL_URL = "https://api-inference.huggingface.co/models/mistralai/Mistral-7B-Instruct-v0.2"
+
+headers = {
+    "Authorization": f"Bearer {HF_API_TOKEN}"
+}
+
 class Query(BaseModel):
     message: str
 
 def ask_ai(prompt):
-    full_prompt = SYSTEM_IDENTITY + "\nUser: " + prompt
-    result = subprocess.run(
-        ["ollama", "run", "mistral"],
-        input=full_prompt,
-        text=True,
-        capture_output=True
-    )
-    return result.stdout
+    payload = {
+        "inputs": SYSTEM_IDENTITY + "\nUser: " + prompt
+    }
+    response = requests.post(MODEL_URL, headers=headers, json=payload)
+    return response.json()[0]["generated_text"]
 
 @app.post("/chat")
 def chat(query: Query):
